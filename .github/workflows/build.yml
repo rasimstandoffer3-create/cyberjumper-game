@@ -12,11 +12,7 @@ jobs:
       - name: Install Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-dev \
-            build-essential apk-utils libffi-dev \
-            platform-tools openjdk-17-jdk unzip \
-            libsdl2-dev libsdl2-image-dev \
-            libsdl2-mixer-dev libsdl2-ttf-dev
+          sudo apt-get install -y python3-dev build-essential apk-utils libffi-dev platform-tools openjdk-17-jdk unzip libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
           pip install buildozer cython virtualenv
       - name: Create Spec
         run: |
@@ -34,3 +30,4 @@ jobs:
         with:
           name: CyberJumper-APK
           path: bin/*.apk
+
