@@ -1,0 +1,36 @@
+name: Build APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-dev \
+            build-essential apk-utils libffi-dev \
+            platform-tools openjdk-17-jdk unzip \
+            libsdl2-dev libsdl2-image-dev \
+            libsdl2-mixer-dev libsdl2-ttf-dev
+          pip install buildozer cython virtualenv
+      - name: Create Spec
+        run: |
+          buildozer init
+          sed -i 's/title = .*/title = Cyber Jumper/g' buildozer.spec
+          sed -i 's/package.name = .*/package.name = cyberjumper/g' buildozer.spec
+          sed -i 's/requirements = .*/requirements = python3,pygame/g' buildozer.spec
+          sed -i 's/#android.fullscreen = .*/android.fullscreen = 1/g' buildozer.spec
+          sed -i 's/orientation = .*/orientation = portrait/g' buildozer.spec
+      - name: Build APK
+        run: |
+          yes | buildozer -v android debug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CyberJumper-APK
+          path: bin/*.apk
